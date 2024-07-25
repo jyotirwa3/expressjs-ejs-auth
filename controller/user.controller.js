@@ -103,5 +103,38 @@ module.exports = {
             return res.redirect(`/forget`)
         }
 
+    },
+    updatePassword: async (req, res) => {
+        try {
+            const { user_password, new_password, confirm_password } = req.body;
+            const email = req.cookies.user.email;
+            console.log(email)
+            const existUser = await User.findOne({ user_email: email })
+            console.log(existUser)
+            const old_password = await comparePassword(user_password, existUser.user_password)
+
+            if (!old_password) {
+                res.json("old password not match")
+            }
+            console.log(new_password)
+            console.log(confirm_password)
+            if (new_password !== confirm_password) {
+                res.json("confirm password not match")
+            }
+
+            const hashNewPass = await hashPassword(new_password)
+            const update = await User.updateOne(
+                { user_email: email },
+                {
+                    user_password: hashNewPass
+                }
+            )
+            if (update) {
+                // res.json("password updated")
+                res.redirect('/')
+            }
+        } catch (error) {
+            console.log(error)
+        }
     }
 }

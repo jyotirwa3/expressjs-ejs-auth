@@ -23,6 +23,9 @@ router.get('/forget', (req, res) => {
 router.get('/changePassword/:email', (req, res) => {
     res.render('changePassword', { messages: req.flash('info'),email:req.params.email })
 })
+router.get('/updatePassword/', (req, res) => {
+    res.render('updatePassword', { messages: req.flash('info'),email:req.params.email })
+})
 router.get('/logout', (req, res) => {
     res.clearCookie('user')
     res.clearCookie('token')
